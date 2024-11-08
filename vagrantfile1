@@ -1,0 +1,29 @@
+# Vagrantfile
+
+Vagrant.configure("2") do |config|
+
+    config.vm.define "debian1" do |debian|
+        debian.vm.box = "bento/debian-12"  # Replace with correct Debian 12 box
+        debian.vm.network "public_network", ip: "192.168.1.201"  # Use an IP in your local network range
+        debian.vm.provider "virtualbox" do |v|
+            v.memory = "4096"
+            v.cpus = 1
+        end
+    end
+
+    config.vm.define "debian2" do |debian|
+        debian.vm.box = "bento/debian-12"  # Replace with correct Debian 12 box
+        debian.vm.network "public_network", ip: "192.168.1.202"  # Use an IP in your local network range
+        debian.vm.provider "virtualbox" do |v|
+            v.memory = "4096"
+            v.cpus = 1
+        end
+    end
+
+    # Optional provisioning (e.g., to install basic utilities)
+    config.vm.provision "shell", inline: <<-SHELL
+        sudo apt-get update
+        sudo apt-get install -y curl wget vim
+    SHELL
+
+end
