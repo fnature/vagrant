@@ -4,8 +4,12 @@ Vagrant.configure("2") do |config|
 
     # Define VM configurations in an array of hashes
     vms = [
-        { name: "debian1", ip: "192.168.1.201", hostname: "debian1", interface: "wlp1s0" }, #Make sure wlp1s0 is your eth interface on the host for briding !
-        { name: "debian2", ip: "192.168.1.202", hostname: "debian2", interface: "wlp1s0" }
+        # Make sure wlp1s0 is your eth interface on the host for briding !
+        # Chech the ips are within the subnet of your local host network because we use bridge interfaces
+        { name: "debian1", ip: "192.168.1.201", hostname: "debian1", interface: "wlp1s0" },
+        { name: "debian2", ip: "192.168.1.202", hostname: "debian2", interface: "wlp1s0" }#,
+        #{ name: "debian3", ip: "192.168.1.203", hostname: "debian3", interface: "wlp1s0" },
+        #{ name: "debian4", ip: "192.168.1.204", hostname: "debian4", interface: "wlp1s0" }
     ]
 
     # Build the /etc/hosts entries dynamically
@@ -31,8 +35,11 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", inline: <<-SHELL
         echo "#{hosts}" | sudo tee -a /etc/hosts
         sudo apt-get update
-        sudo apt-get install -y curl wget vim snapd 
+        sudo apt-get install -y curl wget vim snapd
+
+        # Add the kubectl alias to ~/.bash_aliases to prevent conflicts
+        echo "alias kubectl='microk8s kubectl'" >> ~/.bash_aliases
+
     SHELL
 
 end
-  
